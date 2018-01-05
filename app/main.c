@@ -28,31 +28,20 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("HELLO WORLD");
-	char last_key;
+	lcd_write_str("CURRENT BIT: ");
 	char key;
 
-	uint8_t counter = 0;
-	char string[25];
-
 	while(1) {
-		/*key = numkey_read();
+		char key = uart_get_char();
 
-		if (key != NO_KEY && key != last_key){
-			if(key == '#')
-				lcd_clear();
-			else
-				lcd_write(CHR, key);
+		if (key == '1'){
+			lcd_write(CHR, '1');
+			lcd_set_cursor_pos(0, 13);
 		}
-
-		last_key = key;*/
-
-		delay_ms(40);
-
-		sprintf(string, "Hello world: %d\r\n", counter);
-
-		uart_write_str(string);
-		counter++;
+		else if(key == '0'){
+			lcd_write(CHR, '0');
+			lcd_set_cursor_pos(0, 13);
+		}
 	}
 }
 
