@@ -20,6 +20,7 @@
 
 int main(void)
 {
+	char key, comp_key;
 	numkey_init();
 	lcd_init();
 	uart_init();
@@ -28,20 +29,23 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("CURRENT BIT: ");
-	char key;
+	lcd_write_str("MESSAGE: ");
+	lcd_set_cursor_pos(1, 0);
 
 	while(1) {
-		char key = uart_get_char();
+		key = numkey_read();
+		comp_key = uart_get_char(false);
+		delay_ms(20);
 
-		if (key == '1'){
-			lcd_write(CHR, '1');
-			lcd_set_cursor_pos(0, 13);
+		if (key == 'C'){
+			lcd_clear();
+			lcd_set_cursor_pos(0, 0);
+			lcd_write_str("MESSAGE: ");
+			lcd_set_cursor_pos(1, 0);
 		}
-		else if(key == '0'){
-			lcd_write(CHR, '0');
-			lcd_set_cursor_pos(0, 13);
-		}
+
+		if (comp_key != '\0')
+			lcd_write(CHR, comp_key);
 	}
 }
 

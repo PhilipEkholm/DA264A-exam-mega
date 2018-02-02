@@ -56,13 +56,21 @@ static void uart_append_serial(char chr) {
 		me.tx_write_pos = 0;
 }
 
-char uart_get_char(void) {
+/*
+ * Get the oldest char found in the buffer,
+ *
+ * @param peek set to true if you only want to peek
+ * otherwise false.
+ */
+
+char uart_get_char(bool peek) {
 	char ret = '\0';
 
 	if (me.rx_read_pos != me.rx_write_pos) {
 		ret = me.rx_buffer[me.rx_read_pos];
 
-		me.rx_read_pos++;
+		if (!peek)
+			me.rx_read_pos++;
 
 		if (me.rx_read_pos >= RX_BUFFER_SIZE)
 			me.rx_read_pos = 0;
@@ -70,6 +78,8 @@ char uart_get_char(void) {
 
 	return ret;
 }
+
+/* Setup the UART */
 
 void uart_init(void) {
 	/*
@@ -83,13 +93,14 @@ void uart_init(void) {
 	/* Set async-mode, 8-bit data, 1 stop-bit and no parity */
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 
+	/* Set pos variables to 0 */
 	me.tx_write_pos = 0;
 	me.tx_read_pos = 0;
 	me.rx_write_pos = 0;
 	me.rx_read_pos = 0;
 }
 
-/* Send over a string, do not send more than 500 characters per second */
+/* Transmit a string, do not send more than 500 characters per second */
 
 void uart_write_str(char *str){
 	while((*str) != '\0') {
