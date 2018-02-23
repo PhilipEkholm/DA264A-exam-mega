@@ -6,6 +6,7 @@
  * 	Created: 2017-01-04 14:42:40
  *  Author: Philip Ekholm, Aron Polner
  */
+
 #include <stdint.h>
 
 #include <avr/interrupt.h>
@@ -17,8 +18,8 @@
 #define BAUD           9600
 #define BRC            ((F_CPU/16/BAUD) - 1)
 
-#define TX_BUFFER_SIZE 128
-#define RX_BUFFER_SIZE 128
+#define TX_BUFFER_SIZE 1024
+#define RX_BUFFER_SIZE 1024
 
 static struct {
 	char tx_buffer[TX_BUFFER_SIZE];
@@ -78,6 +79,16 @@ char uart_get_char(bool peek) {
 
 	return ret;
 }
+
+void uart_get_str(char *p_str) {
+	while(uart_get_char(true) != '\0') {
+		*p_str = uart_get_char(false);
+		p_str++;
+	}
+
+	*p_str = '\0';
+}
+
 
 /* Setup the UART */
 

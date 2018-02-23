@@ -20,7 +20,9 @@
 
 int main(void)
 {
-	char key, comp_key;
+	char key;
+	char *comp_str = "HELU";
+
 	numkey_init();
 	lcd_init();
 	uart_init();
@@ -29,23 +31,22 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("MESSAGE: ");
-	lcd_set_cursor_pos(1, 0);
+	lcd_write_str("MESSAGE: ", 0);
 
 	while(1) {
+		comp_str = "";
 		key = numkey_read();
-		comp_key = uart_get_char(false);
-		delay_ms(20);
+		delay_s(3);
 
+		/* Clear screen */
 		if (key == 'C'){
 			lcd_clear();
-			lcd_set_cursor_pos(0, 0);
-			lcd_write_str("MESSAGE: ");
-			lcd_set_cursor_pos(1, 0);
+			lcd_write_str("MESSAGE: ", 0);
 		}
 
-		if (comp_key != '\0')
-			lcd_write(CHR, comp_key);
+		uart_get_str(comp_str);
+
+		lcd_write_str(comp_str, 1);
 	}
 }
 
