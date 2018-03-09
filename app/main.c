@@ -20,6 +20,9 @@
 
 int main(void)
 {
+	char key;
+	char chr;
+
 	numkey_init();
 	lcd_init();
 	uart_init();
@@ -28,31 +31,22 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("HELLO WORLD");
-	char last_key;
-	char key;
-
-	uint8_t counter = 0;
-	char string[25];
+	lcd_write_str("MESSAGE: ", 0);
 
 	while(1) {
-		/*key = numkey_read();
+		key = numkey_read();
+		delay_ms(20);
 
-		if (key != NO_KEY && key != last_key){
-			if(key == '#')
-				lcd_clear();
-			else
-				lcd_write(CHR, key);
+		/* Clear screen */
+		if (key == 'C'){
+			lcd_clear();
+			lcd_write_str("MESSAGE: ", 0);
 		}
 
-		last_key = key;*/
+		chr = uart_get_char(false);
 
-		delay_ms(40);
-
-		sprintf(string, "Hello world: %d\r\n", counter);
-
-		uart_write_str(string);
-		counter++;
+		if (chr != '\0')
+			lcd_write(CHR, chr);
 	}
 }
 
