@@ -41,7 +41,16 @@ ISR(USART1_TX_vect) {
 }
 
 ISR(USART1_RX_vect) {
-	me.rx_buffer[me.rx_write_pos] = UDR1;
+	/* First check for parity error */
+	if (UCSR1A & (1 << UPE1)){
+		/* Return an E as in error if that's the case */
+		me.rx_buffer[me.rx_write_pos] = UDR1;
+		me.rx_buffer[me.rx_write_pos] = 'E';
+	}
+	else {
+		me.rx_buffer[me.rx_write_pos] = UDR1;
+	}
+
 	me.rx_write_pos++;
 
 	/* TODO: Eventually need to fix this if we write enough chars to "run over" */
@@ -69,6 +78,8 @@ char uart_get_char(bool peek) {
 
 	if (me.rx_read_pos != me.rx_write_pos) {
 		ret = me.rx_buffer[me.rx_read_pos];
+
+
 
 		if (!peek)
 			me.rx_read_pos++;
@@ -101,8 +112,10 @@ void uart_init(void) {
 	UBRR1L = BRC;
 	/* Enable both transmit and receive, as well as interrupts for both */
 	UCSR1B = (1 << TXEN0)  | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
-	/* Set async-mode, 8-bit data, 1 stop-bit and no parity */
-	UCSR1C = (1 << UCSZ01) | (1 << UCSZ00);
+	/* Set async-mode, 8-bit data, 1 stop-bit and no parity and enable even parity */
+	UCSR1C = (1 << UCSZ01) | (1 << UCSZ00) | (1 << UPM01) | (0 << UPM00);
+	
+
 
 	/* Set pos variables to 0 */
 	me.tx_write_pos = 0;
