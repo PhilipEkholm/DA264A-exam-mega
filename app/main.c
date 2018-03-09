@@ -21,7 +21,7 @@
 int main(void)
 {
 	char key;
-	char *comp_str = "HELU";
+	char chr;
 
 	numkey_init();
 	lcd_init();
@@ -34,9 +34,8 @@ int main(void)
 	lcd_write_str("MESSAGE: ", 0);
 
 	while(1) {
-		comp_str = "";
 		key = numkey_read();
-		delay_s(3);
+		delay_ms(20);
 
 		/* Clear screen */
 		if (key == 'C'){
@@ -44,9 +43,10 @@ int main(void)
 			lcd_write_str("MESSAGE: ", 0);
 		}
 
-		uart_get_str(comp_str);
+		chr = uart_get_char(false);
 
-		lcd_write_str(comp_str, 1);
+		if (chr != '\0')
+			lcd_write(CHR, chr);
 	}
 }
 

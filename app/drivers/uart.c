@@ -30,9 +30,9 @@ static struct {
 	uint8_t rx_write_pos;
 } me;
 
-ISR(USART0_TX_vect) {
+ISR(USART1_TX_vect) {
 	if (me.tx_read_pos != me.tx_write_pos){
-		UDR0 = me.tx_buffer[me.tx_read_pos];
+		UDR1 = me.tx_buffer[me.tx_read_pos];
 		me.tx_read_pos++;
 
 		if (me.tx_read_pos >= TX_BUFFER_SIZE)
@@ -40,8 +40,8 @@ ISR(USART0_TX_vect) {
 	}
 }
 
-ISR(USART0_RX_vect) {
-	me.rx_buffer[me.rx_write_pos] = UDR0;
+ISR(USART1_RX_vect) {
+	me.rx_buffer[me.rx_write_pos] = UDR1;
 	me.rx_write_pos++;
 
 	/* TODO: Eventually need to fix this if we write enough chars to "run over" */
@@ -97,12 +97,12 @@ void uart_init(void) {
 	 * Set Baud rate by setting BRCC value, for some reason
 	 * the high register only uses right nibble...
 	 */
-	UBRR0H = (BRC >> 8);
-	UBRR0L = BRC;
+	UBRR1H = (BRC >> 8);
+	UBRR1L = BRC;
 	/* Enable both transmit and receive, as well as interrupts for both */
-	UCSR0B = (1 << TXEN0)  | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
+	UCSR1B = (1 << TXEN0)  | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
 	/* Set async-mode, 8-bit data, 1 stop-bit and no parity */
-	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+	UCSR1C = (1 << UCSZ01) | (1 << UCSZ00);
 
 	/* Set pos variables to 0 */
 	me.tx_write_pos = 0;
