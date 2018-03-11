@@ -31,22 +31,42 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("MESSAGE: ", 0);
+	lcd_write_str("POWER: ", 0);
 
-	while(1) {
+	while(1) 
+	{
+		/* Added to be able to clear the screen */
 		key = numkey_read();
 		delay_ms(20);
+		lcd_set_cursor_pos(0, 7);
 
 		/* Clear screen */
-		if (key == 'C'){
+		if (key == 'C')
+		{
 			lcd_clear();
-			lcd_write_str("MESSAGE: ", 0);
+			lcd_write_str("POWER: ", 0);
 		}
 
-		chr = uart_get_char(false);
+		/* Get two characters from the UART */
+		for(int i = 0; i < 2; ++i)
+		{
+			while(chr = uart_get_char(true) == '\0')
+			{
+				// do nothing
+			}
 
-		if (chr != '\0')
+			chr = uart_get_char(false);
+
 			lcd_write(CHR, chr);
+			
+		}
+
+		lcd_write(CHR, ' ');
+		lcd_write(CHR, 'E');
+		lcd_write(CHR, '-');
+		lcd_write(CHR, '3');
+		lcd_write(CHR, 'W');
+		delay_ms(20);
 	}
 }
 

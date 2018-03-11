@@ -79,8 +79,6 @@ char uart_get_char(bool peek) {
 	if (me.rx_read_pos != me.rx_write_pos) {
 		ret = me.rx_buffer[me.rx_read_pos];
 
-
-
 		if (!peek)
 			me.rx_read_pos++;
 

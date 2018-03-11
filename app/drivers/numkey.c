@@ -19,6 +19,7 @@
  * Created by Mathias Beckius, 26 June 2015, for the course DA346A at
  * Malmo University.
  */
+
 #include <inttypes.h>
 
 #include <avr/io.h>
