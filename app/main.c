@@ -20,8 +20,10 @@
 
 int main(void)
 {
-	char key;
-	char chr;
+	char 	key,
+			chr;
+
+	char *power_str = "P=";
 
 	numkey_init();
 	lcd_init();
@@ -31,26 +33,26 @@ int main(void)
 	/* Enable global interrupts */
 	sei();
 
-	lcd_write_str("POWER: ", 0);
+	lcd_write_str(power_str);
 
 	while(1) 
 	{
 		/* Added to be able to clear the screen */
 		key = numkey_read();
-		delay_ms(20);
-		lcd_set_cursor_pos(0, 7);
+		delay_ms(10);
+		lcd_set_cursor_pos(0, 4);
 
 		/* Clear screen */
 		if (key == 'C')
 		{
 			lcd_clear();
-			lcd_write_str("POWER: ", 0);
+			lcd_write_str(power_str);
 		}
 
 		/* Get two characters from the UART */
-		for(int i = 0; i < 2; ++i)
+		for(int i = 0; i < 3; ++i)
 		{
-			while(chr = uart_get_char(true) == '\0')
+			while(chr = uart_get_char(true) == 'W')
 			{
 				// do nothing
 			}
@@ -58,14 +60,9 @@ int main(void)
 			chr = uart_get_char(false);
 
 			lcd_write(CHR, chr);
-			
 		}
 
-		lcd_write(CHR, ' ');
-		lcd_write(CHR, 'E');
-		lcd_write(CHR, '-');
-		lcd_write(CHR, '3');
-		lcd_write(CHR, 'W');
+		lcd_write_str(" E-3W");
 		delay_ms(20);
 	}
 }

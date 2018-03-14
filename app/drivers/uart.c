@@ -15,7 +15,7 @@
 
 #define F_CPU          16000000 /* 16MHz */
 
-#define BAUD           9600
+#define BAUD           1200
 #define BRC            ((F_CPU/16/BAUD) - 1)
 
 #define TX_BUFFER_SIZE 1024
@@ -74,7 +74,7 @@ static void uart_append_serial(char chr) {
  */
 
 char uart_get_char(bool peek) {
-	char ret = '\0';
+	char ret = 'W';
 
 	if (me.rx_read_pos != me.rx_write_pos) {
 		ret = me.rx_buffer[me.rx_read_pos];
@@ -105,9 +105,10 @@ void uart_init(void) {
 	/*
 	 * Set Baud rate by setting BRCC value, for some reason
 	 * the high register only uses right nibble...
+	 * coded the high and low registers for a BAUD of 1200
 	 */
-	UBRR1H = (BRC >> 8);
-	UBRR1L = BRC;
+	UBRR1H = 0b00000011;
+	UBRR1L = 0b01000000;
 	/* Enable both transmit and receive, as well as interrupts for both */
 	UCSR1B = (1 << TXEN0)  | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
 	/* Set async-mode, 8-bit data, 1 stop-bit and no parity and enable even parity */

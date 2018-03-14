@@ -31,6 +31,6 @@ enum lcd_register
 
 void lcd_init(void);
 void lcd_write(enum lcd_register, uint8_t);
-void lcd_write_str(char *, uint8_t);
+void lcd_write_str(char *);
 void lcd_clear(void);
 void lcd_set_cursor_pos(uint8_t, uint8_t);

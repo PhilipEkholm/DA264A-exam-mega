@@ -142,15 +142,12 @@ void lcd_write(enum lcd_register lcd_reg, uint8_t data)
  *  parameter:
  *	p_str: pointer to the string's first character
  */
-void lcd_write_str(char *p_str, uint8_t row)
+void lcd_write_str(char *p_str)
 {
-	uint8_t pos = 0;
-
 	//lcd_set_cursor_pos(row, 0);
 
 	while (*(p_str) != '\0'){
 		lcd_write(CHR, *p_str);
-		lcd_set_cursor_pos(row, ++pos);
 
 		p_str++;
 	}
