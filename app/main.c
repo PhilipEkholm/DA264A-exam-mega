@@ -62,7 +62,7 @@ int main(void)
 			}
 
 			lcd_write_str(" E-3W");
-			delay_ms(250);
+			delay_ms(150);
 		}
 	}
 }
