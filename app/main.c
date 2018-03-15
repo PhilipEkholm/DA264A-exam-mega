@@ -39,8 +39,6 @@ int main(void)
 	{
 		/* Added to be able to clear the screen */
 		key = numkey_read();
-		delay_ms(10);
-		lcd_set_cursor_pos(0, 4);
 
 		/* Clear screen */
 		if (key == 'C')
@@ -49,21 +47,23 @@ int main(void)
 			lcd_write_str(power_str);
 		}
 
-		/* Get two characters from the UART */
-		for(int i = 0; i < 3; ++i)
+		lcd_set_cursor_pos(0, 3);
+
+		/* Waits for the sync char */
+		if(uart_get_char(false) == '-')
 		{
-			while(chr = uart_get_char(true) == 'W')
+			delay_ms(10);
+			/* Get two characters from the UART */
+			for(int i = 0; i < 2; ++i)
 			{
-				// do nothing
+				chr = uart_get_char(false);
+
+				lcd_write(CHR, chr);
 			}
 
-			chr = uart_get_char(false);
-
-			lcd_write(CHR, chr);
+			lcd_write_str(" E-3W");
+			delay_ms(250);
 		}
-
-		lcd_write_str(" E-3W");
-		delay_ms(20);
 	}
 }
 

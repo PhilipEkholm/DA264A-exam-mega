@@ -74,7 +74,7 @@ static void uart_append_serial(char chr) {
  */
 
 char uart_get_char(bool peek) {
-	char ret = 'W';
+	char ret = '\0';
 
 	if (me.rx_read_pos != me.rx_write_pos) {
 		ret = me.rx_buffer[me.rx_read_pos];
